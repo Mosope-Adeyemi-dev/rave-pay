@@ -49,13 +49,13 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     meta: {
-      title: 'Payment Wallet',
+      title: 'Rave Payment Wallet',
       author: 'mosope.dev'
     },
     manifest: {
-      name: 'BU Payment Wallet',
-      short_name: 'BU PAY',
-      description: 'Fast & Secure payment wallet you can trust. Zero transfer fees! Zero hidden charges!',
+      name: 'Rave Payment Wallet',
+      short_name: 'Rave Pay',
+      description: 'Fast & Secure payment wallet you can trust. Zero transfer fees! and no hidden charges!',
       lang: 'en'
     },
     icon: {
