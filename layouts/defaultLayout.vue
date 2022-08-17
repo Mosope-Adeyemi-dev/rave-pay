@@ -1,7 +1,7 @@
 <template>
   <div class="whole-window">
-    <Nuxt v-if="isMobile" class="nuxt-component"/>
-    <div v-if="!isMobile" class="disclaimer-container">
+    <Nuxt class="nuxt-component"/>
+    <div class="disclaimer-container">
       <div class="disclaimer-msg">
         <img src="@/assets/images/icon.png" alt="Logo">
         <h1>Hi There, Welcome to RavePay!</h1>
@@ -18,7 +18,6 @@
 export default {
   data(){
     return {
-      isMobile: false,
     }
   },
   head: {
@@ -33,9 +32,9 @@ export default {
     ],
   },
   beforeMount(){
-    if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(navigator.userAgent)) {
-        this.isMobile = true;
-    }
+    // if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(navigator.userAgent)) {
+    //     this.isMobile = true;
+    // }
   },
   methods:{
   }
@@ -138,13 +137,36 @@ a, a::before, a::after{
 }
 @media screen and (max-width: 1300px) {
   .disclaimer-msg{
-    text-align: center;
     width: 80%;
   }
 }
+@media screen and (max-width: 999px) {
+  .disclaimer-msg{
+    width: 90%;
+  }
+  .disclaimer-msg h1{
+    font-size: 35px;
+  }
+  .disclaimer-msg .main-text{
+    font-size: 19px;
+    margin-bottom: 10px;
+  }
+}
+@media screen and (max-width: 700px) {
+  .disclaimer-container{
+    display: none;
+  }
+}
+
 .nuxt-component{
-  background: red;
-  width: 100%;
+  /* background: red; */
+  /* width: 100%; */
   height: 100vh;
+  display: none;
+}
+@media screen and (max-width: 700px) {
+  .nuxt-component{
+    display: block;
+  }
 }
 </style>
