@@ -13,7 +13,7 @@
                             <input v-model="password" type="password" required>
                         </div>
                 </div>
-                <p class="vendor-alert">Login as a <NuxtLink to="/vendor/login" class="highlight">vendor</NuxtLink>?</p>
+                <p class="vendor-alert">Create an <NuxtLink to="/signup" class="highlight">account!</NuxtLink></p>
             </div>
             <div class="call-to-action">
                 <p v-if="!isLoading" class="back" @click="$router.push('/')">
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+    import Cookies from 'js-cookie'
     export default {
         layout: 'defaultLayout',
        data () {
@@ -51,8 +52,9 @@
                 }).then((onfulfilled) => {
                     this.isLoading = false
                     this.$toast.success(onfulfilled.data.message);
-                    localStorage.setItem('Token', onfulfilled.data.data.token)
-                    this.$router.push('/dashboard');
+                    Cookies.set('token', onfulfilled.data.data.token, { expires: 1 })
+                    // localStorage.setItem('Token', onfulfilled.data.data.token)
+                    // this.$router.push('/dashboard');
                 }).catch((onrejected) => {
                     this.isLoading = false
                     if  (typeof onrejected.response.data.message !== 'string'){
@@ -63,7 +65,7 @@
                         this.$toast.error(onrejected.response.data.message);
                     }
                 })
-            },
+        },
        }
     }
 </script>

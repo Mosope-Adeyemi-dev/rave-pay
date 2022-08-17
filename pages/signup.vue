@@ -1,7 +1,7 @@
 <template>
     <div class="whole-container">
         <div class="login-sect">
-            <h1 class="greeting">Become a vendor!</h1>
+            <h1 class="greeting">Get started with RavePay!</h1>
             <div class="input-sect">
                 <form>
                     <div class="input-box">
@@ -20,12 +20,6 @@
                         <label>Password</label>
                         <input v-model="password" type="password" required>
                     </div>
-                    <div class="input-box">
-                        <label>Service offered</label>
-                        <select v-model="service" class="services" required>
-                            <option v-for="serviceItem in offeredServices" :key="serviceItem" :value="serviceItem"> {{serviceItem}} </option>
-                        </select>
-                    </div>
                 </form>
             </div>
         </div>
@@ -36,7 +30,7 @@
             <p v-if="!isLoading" class="back" @click="$router.push('/')">
                 Go Back
             </p>
-            <input v-if="!isLoading" type="submit" class="default-btn" value="REGISTER" :disabled="email == '' || password == ''" @click="vedorSignup()">
+            <input v-if="!isLoading" type="submit" class="default-btn" value="REGISTER" :disabled="email == '' || password == ''" @click="signup()">
             <button v-if="isLoading" class="default-btn">
                 <img class="btn-loader" src="@/assets/icons/loader.svg" alt="">
             </button>
@@ -45,6 +39,7 @@
 </template>
 
 <script>
+    import Cookies from 'js-cookie'
     export default {
         layout: 'defaultLayout',
         data() {
@@ -54,27 +49,25 @@
                 isLoading: false,
                 firstname: '',
                 lastname: '',
-                service: '',
-                offeredServices: ['Transportation (KEKE)', 'Transportation (BIKE)', 'Sales (BUSA)', 'Sales (BABRITE)', 'Laundry', 'General purpose']
             }
         },
         methods: {
-        vedorSignup () {
+        signup () {
                 this.isLoading = true;
                 this.$axios({
                     method: 'POST',
-                    url: 'auth/vendor/signup',
+                    url: 'auth/customer/signup',
                     data: {
                         email:  this.email,
                         password: this.password,
                         firstname: this.firstname,
                         lastname: this.lastname,
-                        offeredService: this.service
                     }
                 }).then((onfulfilled) => {
                     this.isLoading = false
                     this.$toast.success(onfulfilled.data.message);
-                    // this.$router.push('/dashboard');
+                    Cookies.set('token', onfulfilled.data.data.token, { expires: 1 })
+                    this.$router.push('/onboarding/create-account-tag');
                 }).catch((onrejected) => {
                     this.isLoading = false
                     if  (typeof onrejected.response.data.message !== 'string'){

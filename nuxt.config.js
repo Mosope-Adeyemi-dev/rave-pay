@@ -65,6 +65,19 @@ export default {
     }
   },
 
+  toast: {
+    position: 'top-right',
+    register: [], // Register custom toasts,
+    action: {
+      text: 'Close',
+      onClick: (e, toastObject) => {
+        toastObject.goAway(0)
+      },
+    },
+    fullWidth: false,
+    closeOnSwipe: true,
+    duration: 5000,
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 }

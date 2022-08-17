@@ -36,7 +36,34 @@
             password: '',
             isLoading: false,
         }
-       } 
+       },
+       methods: {
+        login () {
+                this.isLoading = true;
+                this.$axios({
+                    method: 'POST',
+                    url: '/auth/login',
+                    data: {
+                        email:  this.email,
+                        password: this.password,
+                    }
+                }).then((onfulfilled) => {
+                    this.isLoading = false
+                    this.$toast.success(onfulfilled.data.message);
+                    localStorage.setItem('Token', onfulfilled.data.data.token)
+                    this.$router.push('/dashboard');
+                }).catch((onrejected) => {
+                    this.isLoading = false
+                    if  (typeof onrejected.response.data.message !== 'string'){
+                    for (const x in onrejected.response.data.message){
+                        this.$toast.error(onrejected.response.data.message[x]);
+                    }
+                    }  else {
+                        this.$toast.error(onrejected.response.data.message);
+                    }
+                })
+        },
+       }
     }
 </script>
 
