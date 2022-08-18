@@ -14,7 +14,7 @@
                     </div>
             </div>
         </div>
-        <p class="vendor-alert">Not a vendor? <NuxtLink to="/login" class="highlight">Login here</NuxtLink></p>
+        <p class="vendor-alert">Not yet a vendor? <NuxtLink to="/vendor/signup" class="highlight">Create account</NuxtLink></p>
         <div class="call-to-action">
                 <p v-if="!isLoading" class="back" @click="$router.push('/')">
                     Go Back

@@ -12,7 +12,7 @@
       <button class="default-btn" @click="$router.push('/login')">GET STARTED
         <img src="@/assets/icons/arrow-right.svg" alt="">
       </button>
-      <a class="login-text" href="/vendor/login">RavePay For Businesses</a>
+      <a class="login-text" href="/vendor/signup">RavePay For Businesses</a>
     </div>
   </div>
 </template>

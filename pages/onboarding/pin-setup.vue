@@ -85,7 +85,7 @@
                 }).then((onfulfilled) => {
                     this.isLoading = false
                     this.$toast.success(onfulfilled.data.message);
-                    // this.$router.push('/dashboard');
+                    this.$router.push('/dashboard');
                 }).catch((onrejected) => {
                     this.isLoading = false
                     if  (typeof onrejected.response.data.message !== 'string'){
