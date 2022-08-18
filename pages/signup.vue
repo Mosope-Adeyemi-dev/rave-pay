@@ -24,12 +24,12 @@
             </div>
         </div>
         <p class="vendor-alert">Already got an account?
-            <NuxtLink to="/vendor/login" class="highlight">Login here</NuxtLink>
+            <NuxtLink to="/login" class="highlight">Login here</NuxtLink>
         </p>
         <div class="call-to-action">
-            <p v-if="!isLoading" class="back" @click="$router.push('/')">
+            <NuxtLink v-if="!isLoading" to="/" class="back">
                 Go Back
-            </p>
+            </NuxtLink>
             <input v-if="!isLoading" type="submit" class="default-btn" value="REGISTER" :disabled="email == '' || password == ''" @click="signup()">
             <button v-if="isLoading" class="default-btn">
                 <img class="btn-loader" src="@/assets/icons/loader.svg" alt="">

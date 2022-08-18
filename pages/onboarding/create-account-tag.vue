@@ -52,8 +52,6 @@
                     this.isLoading = false
                     this.tagStatus = true
                     this.tagVerified = true
-                    // this.$toast.success(onfulfilled.data.message);
-                    this.$router.push('/onboarding/pin-setup');
                 }).catch((onrejected) => {
                     this.tagStatus = false
                     this.isLoading = false
@@ -81,6 +79,7 @@
                     this.isLoading = false
                     this.tagStatus = true
                     this.$toast.success(onfulfilled.data.message);
+                    this.$router.push('/onboarding/pin-setup');
                     // this.$router.push('/dashboard');
                 }).catch((onrejected) => {
                     this.tagStatus = false
