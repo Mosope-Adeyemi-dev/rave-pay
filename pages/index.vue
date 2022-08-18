@@ -9,10 +9,10 @@
       </div>
     </div>
     <div class="call-to-action">
-      <button class="default-btn">GET STARTED
+      <button class="default-btn" @click="$router.push('/login')">GET STARTED
         <img src="@/assets/icons/arrow-right.svg" alt="">
       </button>
-      <a class="login-text" href="/login">LOGIN</a>
+      <a class="login-text" href="/vendor/login">RavePay For Businesses</a>
     </div>
   </div>
 </template>
@@ -94,6 +94,7 @@ export default {
 .login-text {
   font-weight: 500;
   font-size: 18px;
-  color: black;
+  color: green;
+  text-decoration: underline;
 }
 </style>

@@ -2,7 +2,7 @@
     <div class="whole-container">
         <form>
         <div class="login-sect">
-            <h1 class="greeting">Hi, Welcome back 👋</h1>
+            <h1 class="greeting">Welcome back,</h1>
             <div class="input-sect">
                     <div class="input-box">
                         <label>Email</label>
