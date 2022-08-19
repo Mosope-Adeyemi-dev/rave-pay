@@ -197,7 +197,7 @@ import FundAccountModal from '~/components/FundAccountModal.vue';
             });
         },
         redirectSocial (url) {
-            window.open(url);
+            window.open(url, '_blank');
         }
     }
 }
