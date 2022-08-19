@@ -3,17 +3,16 @@
         <div class="user-intro">
             <img class="user-photo" :src="userDetails?.photo" alt="">
             <div class="user-intro-text">
-                <p class="greeting">Hello {{ userDetails?.firstname}}</p>
-                <p class="welcome-text">Welcome back 👋</p>
+                <p class="greeting">@{{ userDetails?.username}}</p>
             </div>
         </div>
-        <div class="balance-card">
+        <div data-aos="fade-in" class="balance-card">
             <div class="card-details">
                 <p class="title">Available Balance</p>
                 <p class="wallet-balance">{{ formatCurrency(walletBalance) }}</p>  
             </div>
         </div>
-        <div class="account-actions">
+        <div data-aos="fade-in" class="account-actions">
             <div class="action-item" @click="showTransferModal = true">
                 <div class="icon-box">
                    <img src="@/assets/icons/transfer.svg" class="transfer" alt="Transfer funds">
@@ -295,11 +294,13 @@ import TransferFundsModal from '~/components/TransferFundsModal.vue';
     border: lightgray;
 }
 .user-intro-text{
-    margin-left: 24px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
 }
-.welcome-text{
-    font-size: 18px;
-    font-weight: 500;
+.user-intro-text p{
+    font-size: 16px;
+    font-weight: 600;
 }
 .balance-card{
     position: relative;

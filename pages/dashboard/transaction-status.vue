@@ -23,11 +23,12 @@
         <div v-if="requestFailed == true && !isLoading" class="status-box failed">
             <img src="@/assets/icons/failed-status.svg" alt="Transaction failed" class="status-illustration">
             <p class="status">
-                FAILED
+                REQUEST FAILED
             </p>
             <p class="status-msg">
-                Your attempt to fund your account has failed.
+                Uh oh... We're unable to verify this transaction right now
             </p>
+            <p class="view-receipt" @click="verifyTransaction()">TRY AGAIN</p>
         </div>
         <img v-if="isLoading == true" src="@/assets/icons/loader.svg" alt="Loading">  
         </div>
