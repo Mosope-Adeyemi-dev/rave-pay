@@ -54,9 +54,18 @@
             }
         },
         mounted(){
-            this.verifyTransaction();
+            this.checkCookie();
+             if (Cookies.get('token') !== undefined) {
+                this.verifyTransaction();
+             }
         },
         methods: {
+            checkCookie () {
+                if (Cookies.get('token') === undefined) {
+                    this.$router.push('/login')
+                    this.$toasted.error('Your session has expired')
+                }
+            },
             verifyTransaction(){
                 this.isLoading = true;
             this.$axios({

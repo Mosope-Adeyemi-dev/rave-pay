@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="account-actions">
-            <div class="action-item">
+            <div class="action-item" @click="showTransferModal = true">
                 <div class="icon-box">
                    <img src="@/assets/icons/transfer.svg" class="transfer" alt="Transfer funds">
                 </div>
@@ -38,7 +38,8 @@
             <div class="transaction-head-box">
                 <p>Recent Transactions</p>
             </div>
-            <div v-if="transactions.length > 1" class="transactions">
+            <!-- {{ transactions }} -->
+            <div v-if="transactions.length >= 1" class="transactions">
                 <div v-for="transaction in transactions" :key="transaction._id" class="transaction-card">
                     <div class="lhs">
                         <img v-if="transaction.transactionType == 'Fund' || transaction.transactionType == 'Fund wallet'" src="@/assets/icons/fund.svg" alt="Fund your RavePay wallet" class="card-icon fund">
@@ -70,14 +71,16 @@
             </div>
         </div>
         <FundAccountModal v-if="showFundModal" @close-fund-wallet="showFundModal = false" @fund-wallet="fundWallet($event)"/>
+        <TransferFundsModal v-if="showTransferModal" :found-user="foundUser" @close-transfer-modal="showTransferModal = false" @transfer-funds="transferFund($event)" @verify-account-tag="verifyTag($event)"/>
     </div>
 </template>
 
 <script>
 import Cookies from 'js-cookie'
 import FundAccountModal from '~/components/FundAccountModal.vue';
+import TransferFundsModal from '~/components/TransferFundsModal.vue';
     export default {
-    components: { FundAccountModal },
+    components: { FundAccountModal, TransferFundsModal },
     layout: 'defaultLayout',
     data() {
         return {
@@ -89,14 +92,25 @@ import FundAccountModal from '~/components/FundAccountModal.vue';
             transactionIsLoading: true,
             fundWalletIsLoading: false,
             showFundModal: false,
+            showTransferModal: false,
+            foundUser: {}
         };
     },
     mounted() {
-        this.getUserDetails();
-        this.getWalletBalance();
-        this.getTransactionHistory();
+        this.checkCookie();
+        if (Cookies.get('token') !== undefined) {
+            this.getUserDetails();
+            this.getWalletBalance();
+            this.getTransactionHistory();
+        }
     },
     methods: {
+        checkCookie () {
+            if (Cookies.get('token') === undefined) {
+                this.$router.push('/login')
+                this.$toasted.error('Your session has expired')
+            }
+        },
         formatCurrency(num) {
             return "₦" + num.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
         },
@@ -184,6 +198,60 @@ import FundAccountModal from '~/components/FundAccountModal.vue';
                 this.showFundModal = false
                 this.fundWalletIsLoading = false;
                 this.redirectSocial(onfulfilled.data.data.authorization_url)
+            }).catch((onrejected) => {
+                this.fundWalletIsLoading = false;
+                if (typeof onrejected.response.data.message !== "string") {
+                    for (const x in onrejected.response.data.message) {
+                        this.$toast.error(onrejected.response.data.message[x]);
+                    }
+                }
+                else {
+                    this.$toast.error(onrejected.response.data.message);
+                }
+            });
+        },
+        transferFund({amount, accountTag, comment}) {
+            this.$axios({
+                method: "POST",
+                url: "/wallet/transfer-fund",
+                data: {
+                    amount,
+                    accountTag,
+                    comment
+                },
+                headers: {
+                    Authorization: `Bearer ${Cookies.get("token")}`
+                },
+            }).then((onfulfilled) => {
+                this.showTransferModal = false
+            }).catch((onrejected) => {
+                this.fundWalletIsLoading = false;
+                if (typeof onrejected.response.data.message !== "string") {
+                    for (const x in onrejected.response.data.message) {
+                        this.$toast.error(onrejected.response.data.message[x]);
+                    }
+                }
+                else {
+                    this.$toast.error(onrejected.response.data.message);
+                }
+            });
+        },
+        verifyTag(tag) {
+            console.log(tag);
+            // this.fundWalletIsLoading = true;
+            this.$axios({
+                method: "GET",
+                url: "/user/profile/find-by-username",
+                data: {
+                    accountTag: tag,
+                },
+                headers: {
+                    Authorization: `Bearer ${Cookies.get("token")}`
+                },
+            }).then((onfulfilled) => {
+                // this.showTransferModal = false
+                // this.fundWalletIsLoading = false;
+                this.foundUser = onfulfilled.data.data
             }).catch((onrejected) => {
                 this.fundWalletIsLoading = false;
                 if (typeof onrejected.response.data.message !== "string") {

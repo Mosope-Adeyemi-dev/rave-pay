@@ -55,7 +55,16 @@
             digit_4s: ''
         }
        },
+       mounted(){
+        this.checkCookie();
+       },
        methods: {
+        checkCookie () {
+            if (Cookies.get('token') === undefined) {
+                this.$router.push('/login')
+                this.$toasted.error('Your session has expired')
+            }
+        },
         nextInput () {
             const inputs = document.getElementsByClassName('auto-input')
             Array.from(inputs).forEach((inpt) => {

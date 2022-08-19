@@ -30,7 +30,7 @@
 <script>
     import Cookies from 'js-cookie'
     export default {
-        layout: 'defaultLayout',
+    layout: 'defaultLayout',
        data () {
         return {
             accountTag: '',
@@ -39,7 +39,16 @@
             tagVerified: false,
         }
        },
+       mounted(){
+        this.checkCookie();
+       },
        methods: {
+        checkCookie () {
+            if (Cookies.get('token') === undefined) {
+                this.$router.push('/login')
+                this.$toasted.error('Your session has expired')
+            }
+        },
         verifyTag () {
                 this.isLoading = true;
                 this.$axios({
