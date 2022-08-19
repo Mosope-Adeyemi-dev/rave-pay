@@ -54,10 +54,10 @@
                         </div>
                         <div v-if="transaction.transactionType == 'Fund' || transaction.transactionType == 'Fund wallet'" class="details">
                             <p class="action">Fund Wallet</p>
-                            <p v-if="transaction.status.toLowerCase() == 'success'" class="action-info">Funds added to your wallet</p>
+                            <p v-if="transaction.status.toLowerCase() == 'success'" class="action-info">Wallet has been funded</p>
                             <p v-if="transaction.status.toLowerCase() == 'abandoned'" class="action-info">Transaction checkout abandoned</p>
                             <p v-if="transaction.status.toLowerCase() == 'failed'" class="action-info">Transaction failed</p>
-                            <p v-if="transaction.status.toLowerCase() == 'pending'" class="action-info">Transaction pending</p>
+                            <p v-if="transaction.status.toLowerCase() == 'pending'" class="action-info">Unprocessed transaction</p>
                         </div>
                     </div>
                     <p v-if="transaction.operationType == 'Debit' && transaction.fundOriginatorAccount == userDetails?._id" class="transaction-amount debit">-{{formatCurrency(transaction.amount)}}</p>
@@ -197,7 +197,8 @@ import FundAccountModal from '~/components/FundAccountModal.vue';
             });
         },
         redirectSocial (url) {
-            window.open(url, '_blank');
+            window.location.replace(url);
+            // window.open(url, '_blank');
         }
     }
 }
