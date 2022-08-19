@@ -21,7 +21,7 @@ export default {
   css: ['@/assets/css/global.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/tooltip.client.js', '@/plugins/aos.client.js'],
+  plugins: ['@/plugins/tooltip.client.js', '@/plugins/aos.client.js', '@/plugins/vueselect.client.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

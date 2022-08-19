@@ -25,7 +25,7 @@
                 </div>
                 <p>Fund</p>
             </div>
-            <div class="action-item">
+            <div class="action-item" @click="showWithdrawModal = true">
                 <div class="icon-box">
                    <img src="@/assets/icons/withdraw.svg" class="withdraw" alt="Withdraw from your RavePay wallet">
                 </div>
@@ -46,7 +46,9 @@
                         <img v-if="transaction.transactionType == 'Transfer'" src="@/assets/icons/transfer.svg" alt="Transfer funds" class="card-icon transfer"> 
                         <div v-if="transaction.transactionType == 'Transfer'" class="details">
                             <p class="action">Transfer</p>
-                            <p class="action-info">Funds sent to @heyTope</p>
+                            <!-- include user tag in transaction details and change here  -->
+                            <p v-if="transaction.fundOriginatorAccount == userDetails?._id" class="action-info">Funds sent to {{ transaction.fundRecipientAccount }}</p>
+                            <p v-if="transaction.fundRecipientAccount == userDetails?._id" class="action-info">Funds received from {{ transaction.fundOriginatorAccount.slice(0, 6) }}</p>
                         </div>
                         <div v-if="transaction.transactionType == 'Withdrawal'" class="details">
                             <p class="action">Withdraw</p>
@@ -71,6 +73,7 @@
         </div>
         <FundAccountModal v-if="showFundModal" @close-fund-wallet="showFundModal = false" @fund-wallet="fundWallet($event)"/>
         <TransferFundsModal v-if="showTransferModal" @close-transfer-modal="showTransferModal = false"/>
+        <WithdrawFundsModal v-if="showWithdrawModal" @close-withdraw-modal="showWithdrawModal = false"/>
     </div>
 </template>
 
@@ -78,8 +81,9 @@
 import Cookies from 'js-cookie'
 import FundAccountModal from '~/components/FundAccountModal.vue';
 import TransferFundsModal from '~/components/TransferFundsModal.vue';
+import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
     export default {
-    components: { FundAccountModal, TransferFundsModal },
+    components: { FundAccountModal, TransferFundsModal, WithdrawFundsModal },
     layout: 'defaultLayout',
     data() {
         return {
@@ -92,6 +96,7 @@ import TransferFundsModal from '~/components/TransferFundsModal.vue';
             fundWalletIsLoading: false,
             showFundModal: false,
             showTransferModal: false,
+            showWithdrawModal: false,
         };
     },
     mounted() {
@@ -208,64 +213,8 @@ import TransferFundsModal from '~/components/TransferFundsModal.vue';
                 }
             });
         },
-        // transferFund({amount, accountTag, comment}) {
-        //     this.$axios({
-        //         method: "POST",
-        //         url: "/wallet/transfer-fund",
-        //         data: {
-        //             amount,
-        //             accountTag,
-        //             comment
-        //         },
-        //         headers: {
-        //             Authorization: `Bearer ${Cookies.get("token")}`
-        //         },
-        //     }).then((onfulfilled) => {
-        //         this.showTransferModal = false
-        //     }).catch((onrejected) => {
-        //         this.fundWalletIsLoading = false;
-        //         if (typeof onrejected.response.data.message !== "string") {
-        //             for (const x in onrejected.response.data.message) {
-        //                 this.$toast.error(onrejected.response.data.message[x]);
-        //             }
-        //         }
-        //         else {
-        //             this.$toast.error(onrejected.response.data.message);
-        //         }
-        //     });
-        // },
-        // verifyTag(tag) {
-        //     console.log(tag);
-        //     // this.fundWalletIsLoading = true;
-        //     this.$axios({
-        //         method: "POST",
-        //         url: "/user/profile/find-by-username",
-        //         headers: {
-        //             Authorization: `Bearer ${Cookies.get("token")}`,
-        //             'content-type': 'application/json',
-        //         },
-        //         data: {
-        //             accountTag: tag,
-        //         },
-        //     }).then((onfulfilled) => {
-        //         // this.showTransferModal = false
-        //         // this.fundWalletIsLoading = false;
-        //         this.foundUser = onfulfilled.data.data
-        //     }).catch((onrejected) => {
-        //         this.fundWalletIsLoading = false;
-        //         if (typeof onrejected.response.data.message !== "string") {
-        //             for (const x in onrejected.response.data.message) {
-        //                 this.$toast.error(onrejected.response.data.message[x]);
-        //             }
-        //         }
-        //         else {
-        //             this.$toast.error(onrejected.response.data.message);
-        //         }
-        //     });
-        // },
         redirectSocial (url) {
             window.location.replace(url);
-            // window.open(url, '_blank');
         }
     }
 }

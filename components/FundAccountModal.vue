@@ -1,7 +1,6 @@
 <template>
     <div class="whole-modal">
         <div class="modal" data-aos="fade-up" data-duration="1500">
-            <!-- <form> -->
                 <img src="@/assets/icons/arrow-left.svg" alt="Go back" @click="$emit('close-fund-wallet')">
                 <p class="modal-name">Fund Account</p>
                 <div class="input-box">
@@ -9,12 +8,11 @@
                     <input v-model="amount" type="number" required>
                 </div>
                 <div class="call-to-action">
-                    <input v-if="!isLoading" type="submit" class="default-btn" value="FUND WALLET" :disabled="amount == ''" @click="$emit('fund-wallet', amount); amount = ''">
+                    <input v-if="!isLoading" type="submit" class="default-btn" value="FUND WALLET" :disabled="amount == ''" @click="$emit('fund-wallet', amount);">
                     <button v-if="isLoading" class="default-btn">
                         <img class="btn-loader" src="@/assets/icons/loader.svg" alt="">
                     </button>
                 </div>
-            <!-- </form> -->
         </div>
     </div>
 </template>

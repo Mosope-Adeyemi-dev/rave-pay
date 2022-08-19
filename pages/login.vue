@@ -51,7 +51,6 @@
                     }
                 }).then((onfulfilled) => {
                     this.isLoading = false
-                    this.$toast.success(onfulfilled.data.message);
                     Cookies.set('token', onfulfilled.data.data.token, { expires: 1 })
                     // localStorage.setItem('Token', onfulfilled.data.data.token)
                     this.$router.push('/dashboard');

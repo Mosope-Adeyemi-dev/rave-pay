@@ -1,33 +1,37 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-    <div class="whole-modal" data-aos="fade-in">
+    <div v-if="bankList.length >= 1" class="whole-modal" data-aos="fade-in">
         <div class="modal" data-aos="fade-up">
-            <img src="@/assets/icons/arrow-left.svg" alt="Go back" @click="$emit('close-transfer-modal'); foundUser.lastname = ''; foundUser.firstname = ''; accountTag = ''; amount = ''; comment = ''">
-            <p class="modal-name">Transfer Funds</p>
-            <div class="input-box" @change="verifyTag(accountTag)">
-                <label>Recepient Tag</label>
-                <input v-model="accountTag" type="text" required>
+            <img src="@/assets/icons/arrow-left.svg" alt="Go back" @click="$emit('close-withdraw-modal')">
+            <p class="modal-name">Enter Bank Details</p>
+            <div class="input-box">
+                <label>Select Bank</label>
+                <v-select v-model="selectedBank" :options="bankList" label="name"></v-select>
+            </div>
+            <div class="input-box">
+                <label>Account Number</label>
+                <input v-model="accountNumber" type="text" required @change="resolveBankDetails()">
             </div>
             <div class="input-box">
                 <label>Recepient Info</label>
                 <div class="fake-input">
-                    <p v-if="!requestFailed" class="found-receipient">{{ foundUser.lastname?.toUpperCase() }} {{ foundUser.firstname?.toUpperCase() }}</p>
-                    <p v-if="requestFailed" class="found-receipient error">INVALID ACCOUNT TAG</p>
+                    <p v-if="!requestFailed" class="found-receipient">{{ resolvedData?.account_name?.toUpperCase() }}</p>
+                    <p v-if="requestFailed" class="found-receipient error">INVALID RECEPIENT ACCOUNT</p>
                 </div>
             </div>
             <div class="input-box">
                 <label>Amount</label>
-                <input v-model="amount" type="number" required>
+                <input v-model="amount" type="number" required :disabled="resolvedData === undefined ? true : false">
             </div>
             <div class="input-box last-input">
                 <label>Comment</label>
-                <input v-model="comment" type="text" required>
+                <input v-model="comment" type="text" required :disabled="resolvedData === undefined ? true : false">
             </div>
             <div class="call-to-action">
-                <input v-if="!isLoading" type="submit" class="default-btn" value="CONTINUE" :disabled="amount == '' || accountTag == ''" @click="showPinModal = true">
+                <input v-if="!isLoading" type="submit" class="default-btn" value="CONTINUE" :disabled="amount == '' || resolvedData === undefined ? true : false" @click="showPinModal = true">
                 <button v-if="isLoading" class="default-btn">
-                    <img class="btn-loader" src="@/assets/icons/loader.svg" alt="">
-                </button>
+                        <img class="btn-loader" src="@/assets/icons/loader.svg" alt="">
+                    </button>
             </div>
         </div>
         <div v-if="showPinModal == true" class="whole-modal">
@@ -43,7 +47,7 @@
                     </div>
                 </div>
                 <div class="call-to-action">
-                    <input v-if="!isLoading" type="submit" class="default-btn" value="TRANSFER" :disabled="amount == '' || accountTag == ''" @click="transferFund()">
+                    <input v-if="!isLoading" type="submit" class="default-btn" value="TRANSFER" :disabled="amount == '' || digit_1 == '' || digit_2 == '' || digit_3 == '' || digit_4 == ''" @click="withdrawFunds()">
                     <button v-if="isLoading" class="default-btn">
                         <img class="btn-loader" src="@/assets/icons/loader.svg" alt="">
                     </button>
@@ -58,7 +62,7 @@
                         SUCCESSFUL
                     </p>
                     <p class="status-msg">
-                        You just Transafered <span class="amount">{{ formatCurrency(transactionDetails.amount) }}</span> to {{transactionDetails.fundRecipientAccount }}.
+                        You just Withdrew <span class="amount">{{ formatCurrency(transactionDetails.amount) }}</span> to your bank.
                     </p>
                     <NuxtLink :to="`/dashboard/transaction-details/${transactionDetails.referenceId}`" class="view-receipt">VIEW RECEIPT</NuxtLink>
                 </div>
@@ -68,30 +72,30 @@
                         {{ transactionError || 'REQUEST FAILED' }}
                     </p>
                     <p class="status-msg">
-                        Your attempt to transfer funds has failed.
+                        Your attempt to withdraw funds has failed.
                     </p>
                 </div>
                 <img v-if="isLoading == true" src="@/assets/icons/loader.svg" alt="Loading">
             </div>
             <div v-if="!isLoading" class="call-to-action">
                 <button class="default-btn" @click="closeStatusModal()">CLOSE
-                    </button>
+            </button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import 'vue-select/dist/vue-select.css';
     import Cookies from 'js-cookie'
     export default {
         props: {},
         data() {
             return {
                 amount: '',
-                accountTag: '',
                 comment: '',
+                accountNumber: '',
                 isLoading: false,
-                foundUser: {},
                 requestFailed: undefined,
                 requestSent: false,
                 showPinModal: false,
@@ -101,7 +105,14 @@
                 digit_4: '',
                 transactionDetails: undefined,
                 transactionError: '',
+                bankList: [],
+                bankListError: '',
+                resolvedData: undefined,
+                selectedBank: undefined,
             }
+        },
+        mounted(){
+            this.getBanks();
         },
         methods: {
             formatCurrency(num) {
@@ -117,36 +128,85 @@
                 this.digit_3 = ''
                 this.digit_4 = ''
                 this.showPinModal = false;
-                this.foundUser = {}
-                this.accountTag = '';
                 this.amount = '';
                 this.comment = ''
             },
-            transferFund() {
+            getBanks() {
+                this.$axios({
+                    method: "GET",
+                    url: "/wallet/banks",
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("token")}`
+                    },
+                }).then((onfulfilled) => {
+                    this.bankList = onfulfilled.data.data
+                }).catch((onrejected) => {
+                    if (typeof onrejected.response.data.message !== "string") {
+                        for (const x in onrejected.response.data.message) {
+                            this.$toast.error(onrejected.response.data.message[x]);
+                        }
+                    } else {
+                        this.bankListError = onrejected.response.data.message
+                        // this.$toast.error(onrejected.response.data.message);
+                    }
+                });
+            },
+            resolveBankDetails() {
+                this.isLoading = true
+                this.resolvedData = undefined
+                this.$axios({
+                    method: "POST",
+                    url: "/wallet/bank/verify-account",
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("token")}`,
+                        'content-type': 'application/json',
+                    },
+                    data: {
+                        bank_code: this.selectedBank?.code,
+                        account_number: this.accountNumber,
+                    },
+                }).then((onfulfilled) => {
+                    this.isLoading = false
+                    this.resolvedData = onfulfilled.data.data
+                }).catch((onrejected) => {
+                    this.isLoading = false
+                    this.requestFailed = true
+                    this.resolvedData = undefined
+                    if (typeof onrejected.response.data.message !== "string") {
+                        for (const x in onrejected.response.data.message) {
+                            this.$toast.error(onrejected.response.data.message[x]);
+                        }
+                    } else {
+                        this.$toast.error(onrejected.response.data.message);
+                    }
+                });
+            },
+            withdrawFunds(){
                 this.isLoading = true
                 this.requestSent = true
                 this.$axios({
                     method: "POST",
-                    url: "/wallet/transfer-fund",
-                    data: {
-                        amount: this.amount,
-                        recipientAccountTag: this.accountTag,
-                        comment: this.comment,
-                        pin: this.digit_1 + this.digit_2 + this.digit_3 + this.digit_4,
-                    },
+                    url: "/wallet/withdraw",
                     headers: {
-                        Authorization: `Bearer ${Cookies.get("token")}`
+                        Authorization: `Bearer ${Cookies.get("token")}`,
+                        'content-type': 'application/json',
+                    },
+                    data: {
+                        bankCode: this.selectedBank?.code,
+                        accountNumber: this.accountNumber,
+                        fullName: this.resolvedData?.account_name,
+                        reason: this.comment,
+                        amount: this.amount,
+                        pin: this.digit_1 + this.digit_2 + this.digit_3 + this.digit_4,
                     },
                 }).then((onfulfilled) => {
                     this.isLoading = false;
                     this.clearInputs();
                     this.transactionDetails = onfulfilled.data.data
-                    // this.$emit('close-transfer-modal');
                 }).catch((onrejected) => {
-                    this.isLoading = false;
                     this.clearInputs()
+                    this.isLoading = false
                     this.requestFailed = true
-                    // this.$emit('close-transfer-modal'); 
                     if (typeof onrejected.response.data.message !== "string") {
                         for (const x in onrejected.response.data.message) {
                             this.$toast.error(onrejected.response.data.message[x]);
@@ -154,36 +214,6 @@
                     } else {
                         this.transactionError = onrejected.response.data.message
                         // this.$toast.error(onrejected.response.data.message);
-                    }
-                });
-            },
-            verifyTag(tag) {
-                this.isLoading = true
-                console.log(tag);
-                this.$axios({
-                    method: "POST",
-                    url: "/user/profile/find-by-username",
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("token")}`,
-                        'content-type': 'application/json',
-                    },
-                    data: {
-                        accountTag: this.accountTag,
-                    },
-                }).then((onfulfilled) => {
-                    this.isLoading = false
-                    this.requestFailed = false
-                    this.foundUser = onfulfilled.data.data
-                }).catch((onrejected) => {
-                    this.isLoading = false
-                    this.requestFailed = true
-                    this.fundWalletIsLoading = false;
-                    if (typeof onrejected.response.data.message !== "string") {
-                        for (const x in onrejected.response.data.message) {
-                            this.$toast.error(onrejected.response.data.message[x]);
-                        }
-                    } else {
-                        this.$toast.error(onrejected.response.data.message);
                     }
                 });
             },

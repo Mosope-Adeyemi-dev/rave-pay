@@ -7,7 +7,7 @@
                 SUCCESSFUL
             </p>
             <p class="status-msg">
-                You just added <span class="amount">{{ transactionDetails.amount }}</span> to your wallet.
+                You just added <span class="amount">{{ formatCurrency(transactionDetails.amount) }}</span> to your wallet.
             </p>
             <NuxtLink to="#" class="view-receipt">VIEW RECEIPT</NuxtLink>
         </div>
@@ -61,6 +61,9 @@
              }
         },
         methods: {
+            formatCurrency(num) {
+                return "₦" + num.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+            },
             checkCookie () {
                 if (Cookies.get('token') === undefined) {
                     this.$router.push('/login')
