@@ -71,7 +71,7 @@
             </div>
         </div>
         <FundAccountModal v-if="showFundModal" @close-fund-wallet="showFundModal = false" @fund-wallet="fundWallet($event)"/>
-        <TransferFundsModal v-if="showTransferModal" :found-user="foundUser" @close-transfer-modal="showTransferModal = false" @transfer-funds="transferFund($event)" @verify-account-tag="verifyTag($event)"/>
+        <TransferFundsModal v-if="showTransferModal" @close-transfer-modal="showTransferModal = false"/>
     </div>
 </template>
 
@@ -93,7 +93,6 @@ import TransferFundsModal from '~/components/TransferFundsModal.vue';
             fundWalletIsLoading: false,
             showFundModal: false,
             showTransferModal: false,
-            foundUser: {}
         };
     },
     mounted() {
@@ -210,60 +209,61 @@ import TransferFundsModal from '~/components/TransferFundsModal.vue';
                 }
             });
         },
-        transferFund({amount, accountTag, comment}) {
-            this.$axios({
-                method: "POST",
-                url: "/wallet/transfer-fund",
-                data: {
-                    amount,
-                    accountTag,
-                    comment
-                },
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("token")}`
-                },
-            }).then((onfulfilled) => {
-                this.showTransferModal = false
-            }).catch((onrejected) => {
-                this.fundWalletIsLoading = false;
-                if (typeof onrejected.response.data.message !== "string") {
-                    for (const x in onrejected.response.data.message) {
-                        this.$toast.error(onrejected.response.data.message[x]);
-                    }
-                }
-                else {
-                    this.$toast.error(onrejected.response.data.message);
-                }
-            });
-        },
-        verifyTag(tag) {
-            console.log(tag);
-            // this.fundWalletIsLoading = true;
-            this.$axios({
-                method: "GET",
-                url: "/user/profile/find-by-username",
-                data: {
-                    accountTag: tag,
-                },
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("token")}`
-                },
-            }).then((onfulfilled) => {
-                // this.showTransferModal = false
-                // this.fundWalletIsLoading = false;
-                this.foundUser = onfulfilled.data.data
-            }).catch((onrejected) => {
-                this.fundWalletIsLoading = false;
-                if (typeof onrejected.response.data.message !== "string") {
-                    for (const x in onrejected.response.data.message) {
-                        this.$toast.error(onrejected.response.data.message[x]);
-                    }
-                }
-                else {
-                    this.$toast.error(onrejected.response.data.message);
-                }
-            });
-        },
+        // transferFund({amount, accountTag, comment}) {
+        //     this.$axios({
+        //         method: "POST",
+        //         url: "/wallet/transfer-fund",
+        //         data: {
+        //             amount,
+        //             accountTag,
+        //             comment
+        //         },
+        //         headers: {
+        //             Authorization: `Bearer ${Cookies.get("token")}`
+        //         },
+        //     }).then((onfulfilled) => {
+        //         this.showTransferModal = false
+        //     }).catch((onrejected) => {
+        //         this.fundWalletIsLoading = false;
+        //         if (typeof onrejected.response.data.message !== "string") {
+        //             for (const x in onrejected.response.data.message) {
+        //                 this.$toast.error(onrejected.response.data.message[x]);
+        //             }
+        //         }
+        //         else {
+        //             this.$toast.error(onrejected.response.data.message);
+        //         }
+        //     });
+        // },
+        // verifyTag(tag) {
+        //     console.log(tag);
+        //     // this.fundWalletIsLoading = true;
+        //     this.$axios({
+        //         method: "POST",
+        //         url: "/user/profile/find-by-username",
+        //         headers: {
+        //             Authorization: `Bearer ${Cookies.get("token")}`,
+        //             'content-type': 'application/json',
+        //         },
+        //         data: {
+        //             accountTag: tag,
+        //         },
+        //     }).then((onfulfilled) => {
+        //         // this.showTransferModal = false
+        //         // this.fundWalletIsLoading = false;
+        //         this.foundUser = onfulfilled.data.data
+        //     }).catch((onrejected) => {
+        //         this.fundWalletIsLoading = false;
+        //         if (typeof onrejected.response.data.message !== "string") {
+        //             for (const x in onrejected.response.data.message) {
+        //                 this.$toast.error(onrejected.response.data.message[x]);
+        //             }
+        //         }
+        //         else {
+        //             this.$toast.error(onrejected.response.data.message);
+        //         }
+        //     });
+        // },
         redirectSocial (url) {
             window.location.replace(url);
             // window.open(url, '_blank');

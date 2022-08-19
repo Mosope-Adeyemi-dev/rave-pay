@@ -72,7 +72,8 @@
                 method: "GET",
                 url: `/wallet/verify-transaction?reference=${this.reference}`,
                 headers: {
-                    Authorization: `Bearer ${Cookies.get("token")}`
+                    Authorization: `Bearer ${Cookies.get("token")}`,
+                    'content-type': 'application/json',
                 },
             }).then((onfulfilled) => {
                 this.isLoading = false;
