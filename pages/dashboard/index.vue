@@ -1,10 +1,13 @@
 <template>
     <div class="whole-container">
-        <div class="user-intro">
-            <img class="user-photo" :src="userDetails?.photo" alt="">
-            <div class="user-intro-text">
-                <p class="greeting">@{{ userDetails?.username}}</p>
+        <div class="header">
+            <div class="user-intro">
+                <img class="user-photo" :src="userDetails?.photo" alt="">
+                <div class="user-intro-text">
+                    <p class="greeting">@{{ userDetails?.username}}</p>
+                </div>  
             </div>
+            <p class="logout" @click="logOut()">LOGOUT</p>
         </div>
         <div data-aos="fade-in" class="balance-card">
             <div class="card-details">
@@ -39,7 +42,7 @@
             </div>
             <!-- {{ transactions }} -->
             <div v-if="transactions.length >= 1" class="transactions">
-                <div v-for="transaction in transactions" :key="transaction._id" class="transaction-card">
+                <div v-for="transaction in transactions" :key="transaction._id" class="transaction-card" @click="$router.push(`/dashboard/transaction-detail/${transaction._id}`)">
                     <div class="lhs">
                         <img v-if="transaction.transactionType == 'Fund' || transaction.transactionType == 'Fund wallet'" src="@/assets/icons/fund.svg" alt="Fund your RavePay wallet" class="card-icon fund">
                         <img v-if="transaction.transactionType == 'Withdrawal'" src="@/assets/icons/withdraw.svg" alt="Withdraw from your RavePay wallet" class="card-icon withdraw">
@@ -47,12 +50,13 @@
                         <div v-if="transaction.transactionType == 'Transfer'" class="details">
                             <p class="action">Transfer</p>
                             <!-- include user tag in transaction details and change here  -->
-                            <p v-if="transaction.fundOriginatorAccount == userDetails?._id" class="action-info">Funds sent to {{ transaction.fundRecipientAccount }}</p>
-                            <p v-if="transaction.fundRecipientAccount == userDetails?._id" class="action-info">Funds received from {{ transaction.fundOriginatorAccount.slice(0, 6) }}</p>
+                            <p v-if="transaction.fundOriginatorAccount == userDetails?._id && transaction.recepientTag && transaction.status.toLowerCase() == 'success'" class="action-info">Transfer to <span class="transaction-user-tag">@{{ transaction.recepientTag }}</span></p>
+                            <p v-if="transaction.fundRecipientAccount == userDetails?._id && transaction.senderTag && transaction.status.toLowerCase() == 'success'" class="action-info">Transfer from <span class="transaction-user-tag">@{{ transaction.senderTag }}</span></p>
+                            <p v-if="transaction.fundRecipientAccount == userDetails?._id && !transaction.senderTag || !transaction.recepientTag" class="action-info">Transfer successful</p>
                         </div>
                         <div v-if="transaction.transactionType == 'Withdrawal'" class="details">
                             <p class="action">Withdraw</p>
-                            <p class="action-info">{{transaction.comment.slice(0, 50) }}</p>
+                            <p class="action-info"><span class="transaction-user-tag">NOTE</span>: {{transaction.comment.slice(0, 50) }}</p>
                         </div>
                         <div v-if="transaction.transactionType == 'Fund' || transaction.transactionType == 'Fund wallet'" class="details">
                             <p class="action">Fund Wallet</p>
@@ -72,7 +76,7 @@
             </div>
         </div>
         <FundAccountModal v-if="showFundModal" @close-fund-wallet="showFundModal = false" @fund-wallet="fundWallet($event)"/>
-        <TransferFundsModal v-if="showTransferModal" @close-transfer-modal="showTransferModal = false"/>
+        <TransferFundsModal v-if="showTransferModal" :sender-tag="userDetails?.username" @close-transfer-modal="showTransferModal = false"/>
         <WithdrawFundsModal v-if="showWithdrawModal" @close-withdraw-modal="showWithdrawModal = false"/>
     </div>
 </template>
@@ -108,6 +112,10 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
         }
     },
     methods: {
+        logOut(){
+            Cookies.remove('token');
+            this.$router.push('/login')
+        },
         checkCookie () {
             if (Cookies.get('token') === undefined) {
                 this.$router.push('/login')
@@ -227,12 +235,25 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
     /* background: black; */
     padding-top: 20px;
 }
-.user-intro{
+.header{
     width: 100%;
     padding: 0 20px 15px;
     margin: auto;
     display: flex;
+    justify-content: space-between;
+}
+.user-intro{
+    /* width: 100%; */
+    /* padding: 0 20px 15px; */
+    /* margin: auto; */
+    display: flex;
     align-content: center;
+}
+.logout{
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: red;
 }
 .user-photo{
     width: 45px;
@@ -331,7 +352,6 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
     background: #93B9FF;
 }
 .recent-transactons{
-    /* background: red; */
     height: 50vh;
     border-top: 1px solid #F7F7F7;
     position: relative;
@@ -342,6 +362,7 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
     display: flex;
     align-items: center;
     padding: 0 20px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.071);
 }
 .transaction-head-box p{
     font-size: 18px;
@@ -371,6 +392,7 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
     justify-content: space-between;
     padding: 0 30px;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 .lhs{
     display: flex;
@@ -383,6 +405,9 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
 .lhs .details .action-info{
     font-weight: 400;
     font-size: 13px;
+}
+.transaction-user-tag{
+    font-weight: 600;
 }
 .transaction-amount{
     font-size: 16px;

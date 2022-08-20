@@ -19,6 +19,9 @@
                     <p v-if="requestFailed" class="found-receipient error">INVALID RECEPIENT ACCOUNT</p>
                 </div>
             </div>
+            <p class="convert-currency">
+                    {{ formatCurrency(Number(amount) || 0)}}
+            </p>
             <div class="input-box">
                 <label>Amount</label>
                 <input v-model="amount" type="number" required :disabled="resolvedData === undefined ? true : false">
@@ -62,9 +65,9 @@
                         SUCCESSFUL
                     </p>
                     <p class="status-msg">
-                        You just Withdrew <span class="amount">{{ formatCurrency(transactionDetails.amount) }}</span> to your bank.
+                        You just Withdrew <span class="amount">{{ formatCurrency(transactionDetails.amount) }}</span> to {{ transactionDetails.bankDetails.account_name }} {{ transactionDetails.bankDetails.bank_name }}.
                     </p>
-                    <NuxtLink :to="`/dashboard/transaction-details/${transactionDetails.referenceId}`" class="view-receipt">VIEW RECEIPT</NuxtLink>
+                    <NuxtLink :to="`/dashboard/transaction-detail/${transactionDetails.referenceId}`" class="view-receipt">VIEW RECEIPT</NuxtLink>
                 </div>
                 <div v-if="requestFailed == true && !isLoading" class="status-box failed">
                     <img src="@/assets/icons/failed-status.svg" alt="Transaction failed" class="status-illustration">
@@ -318,6 +321,11 @@
         font-size: 500;
         margin-bottom: 8px;
     }
+    .convert-currency{
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
     .pin-box {
         display: flex;
         width: 100%;
@@ -363,7 +371,7 @@
     }
     .call-to-action {
         position: absolute;
-        bottom: 4vh;
+        bottom: 0;
         left: 0;
         right: 0;
         text-align: center;
@@ -380,6 +388,7 @@
         border: 0;
         width: 90%;
         cursor: pointer;
+        margin-bottom: 4vh;
     }
     .default-btn:disabled {
         /* background: rgb(36, 35, 35); */

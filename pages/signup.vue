@@ -27,9 +27,9 @@
             <NuxtLink to="/login" class="highlight">Login here</NuxtLink>
         </p>
         <div class="call-to-action">
-            <NuxtLink v-if="!isLoading" to="/" class="back">
+            <p v-if="!isLoading" class="back" @click="$router.push('/')">
                 Go Back
-            </NuxtLink>
+            </p>
             <input v-if="!isLoading" type="submit" class="default-btn" value="REGISTER" :disabled="email == '' || password == ''" @click="signup()">
             <button v-if="isLoading" class="default-btn">
                 <img class="btn-loader" src="@/assets/icons/loader.svg" alt="">
@@ -65,7 +65,6 @@
                     }
                 }).then((onfulfilled) => {
                     this.isLoading = false
-                    this.$toast.success(onfulfilled.data.message);
                     Cookies.set('token', onfulfilled.data.data.token, { expires: 1 })
                     this.$router.push('/onboarding/create-account-tag');
                 }).catch((onrejected) => {
@@ -93,7 +92,7 @@
     }
     .login-sect {
         width: 90%;
-        height: 75vh;
+        /* height: 75vh; */
         /* background: red; */
         margin: auto;
         overflow-y: auto;

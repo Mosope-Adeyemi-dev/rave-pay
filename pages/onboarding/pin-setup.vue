@@ -6,7 +6,7 @@
                 <p class="info">Your transaction pin will be required to process transfer of funds on RavePay, remember to keep your pin private buddy!</p>
                 <div v-if="!confirmPassword" class="input-sect">
                     <div class="pin-box">
-                        <input v-model="digit_1" type="text" class="auto-input" required maxlength="1" @keyup="nextInput">
+                        <input v-model="digit_1" type="text" class="auto-input" required maxlength="1" @keydown="nextInput">
                         <input v-model="digit_2" type="text" class="auto-input" required maxlength="1">
                         <input v-model="digit_3" type="text" class="auto-input" required maxlength="1">
                         <input v-model="digit_4" type="text" class="auto-input" required maxlength="1">
@@ -15,10 +15,10 @@
                 </div>
                 <div v-if="confirmPassword" class="input-sect">
                     <div class="pin-box">
-                        <input v-model="digit_1s" type="text" class="auto-input" required maxlength="1" @keyup="nextInput">
-                        <input v-model="digit_2s" type="text" class="auto-input" required maxlength="1">
-                        <input v-model="digit_3s" type="text" class="auto-input" required maxlength="1">
-                        <input v-model="digit_4s" type="text" class="auto-input" required maxlength="1">
+                        <input v-model="digit_1s" type="number" class="auto-input" required maxlength="1" @keydown="nextInput">
+                        <input v-model="digit_2s" type="number" class="auto-input" required maxlength="1">
+                        <input v-model="digit_3s" type="number" class="auto-input" required maxlength="1">
+                        <input v-model="digit_4s" type="number" class="auto-input" required maxlength="1">
                     </div>
                     <p class="input-action">Re-Enter your 4-Digit Pin</p>
                 </div>
@@ -93,7 +93,6 @@
                     }
                 }).then((onfulfilled) => {
                     this.isLoading = false
-                    this.$toast.success(onfulfilled.data.message);
                     this.$router.push('/dashboard');
                 }).catch((onrejected) => {
                     this.isLoading = false

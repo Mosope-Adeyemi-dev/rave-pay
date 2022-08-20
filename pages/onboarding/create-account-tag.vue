@@ -3,11 +3,11 @@
        <form>
             <div class="login-sect">
                 <h1 class="greeting">Let's get you setup!</h1>
-                <p class="info">Your account tag/username is basically your bank account number for your wallet, use this to receive and send funds on RavePay.</p>
+                <p class="info">Your account tag/username is like your bank account number for your wallet, use this to receive and send funds on RavePay. Feel free, get creative!</p>
                 <div class="input-sect">
                         <div class="input-box">
                             <label>Account Tag / Username</label>
-                            <input v-model="accountTag" type="text" required>
+                            <input v-model="accountTag" type="text" placeholder="E.g mosope.dev" required>
                             <p v-if="tagStatus === false" class="status-msg unavailable">Uh Oh... This tag is unavailable.</p>
                             <p v-if="tagStatus" class="status-msg available">Hurray! This tag is available for use.</p>
                         </div>
@@ -87,7 +87,6 @@
                 }).then((onfulfilled) => {
                     this.isLoading = false
                     this.tagStatus = true
-                    this.$toast.success(onfulfilled.data.message);
                     this.$router.push('/onboarding/pin-setup');
                     // this.$router.push('/dashboard');
                 }).catch((onrejected) => {

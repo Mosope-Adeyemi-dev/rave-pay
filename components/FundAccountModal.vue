@@ -3,6 +3,9 @@
         <div class="modal" data-aos="fade-up" data-duration="1500">
                 <img src="@/assets/icons/arrow-left.svg" alt="Go back" @click="$emit('close-fund-wallet')">
                 <p class="modal-name">Fund Account</p>
+                <p class="convert-currency">
+                    {{ formatCurrency(Number(amount) || 0)}}
+                </p>
                 <div class="input-box">
                     <label>Amount</label>
                     <input v-model="amount" type="number" required>
@@ -21,9 +24,14 @@
     export default {
         data() {
             return {
-                amount: '',
+                amount: 0,
                 isLoading: false,
             }
+        },
+        methods: {
+            formatCurrency(num) {
+                return "₦" + num.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+            },
         }
     }
 </script>
@@ -54,6 +62,11 @@
         font-size: 16px;
         margin: 15px 0 25px;
     }
+    .convert-currency{
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
     .input-box {
         display: flex;
         flex-direction: column;
@@ -78,7 +91,7 @@
     }
     .call-to-action{
         position: absolute;
-        bottom: 4vh;
+        bottom: 0;
         left: 0;
         right: 0;
         text-align: center;
@@ -95,6 +108,7 @@
     border: 0;
     width: 90%;
     cursor: pointer;
+    margin-bottom: 4vh;
 }
 .default-btn:disabled{
     /* background: rgb(36, 35, 35); */

@@ -2,7 +2,7 @@
 <template>
     <div class="whole-modal" data-aos="fade-in">
         <div class="modal" data-aos="fade-up">
-            <img src="@/assets/icons/arrow-left.svg" alt="Go back" @click="$emit('close-transfer-modal'); foundUser.lastname = ''; foundUser.firstname = ''; accountTag = ''; amount = ''; comment = ''">
+            <img src="@/assets/icons/arrow-left.svg" alt="Go back" @click="$emit('close-transfer-modal'); foundUser = undefined; accountTag = ''; amount = ''; comment = ''">
             <p class="modal-name">Transfer Funds</p>
             <div class="input-box" @change="verifyTag(accountTag)">
                 <label>Recepient Tag</label>
@@ -11,17 +11,20 @@
             <div class="input-box">
                 <label>Recepient Info</label>
                 <div class="fake-input">
-                    <p v-if="!requestFailed" class="found-receipient">{{ foundUser.lastname?.toUpperCase() }} {{ foundUser.firstname?.toUpperCase() }}</p>
+                    <p v-if="!requestFailed" class="found-receipient">{{ foundUser?.lastname?.toUpperCase() }} {{ foundUser?.firstname?.toUpperCase() }}</p>
                     <p v-if="requestFailed" class="found-receipient error">INVALID ACCOUNT TAG</p>
                 </div>
             </div>
+            <p class="convert-currency">
+                    {{ formatCurrency(Number(amount) || 0)}}
+            </p>
             <div class="input-box">
                 <label>Amount</label>
-                <input v-model="amount" type="number" required>
+                <input v-model="amount" type="number" required :disabled="foundUser === undefined ? true : false">
             </div>
             <div class="input-box last-input">
                 <label>Comment</label>
-                <input v-model="comment" type="text" required>
+                <input v-model="comment" type="text" required :disabled="foundUser === undefined ? true : false">
             </div>
             <div class="call-to-action">
                 <input v-if="!isLoading" type="submit" class="default-btn" value="CONTINUE" :disabled="amount == '' || accountTag == ''" @click="showPinModal = true">
@@ -58,7 +61,7 @@
                         SUCCESSFUL
                     </p>
                     <p class="status-msg">
-                        You just Transafered <span class="amount">{{ formatCurrency(transactionDetails.amount) }}</span> to {{transactionDetails.fundRecipientAccount }}.
+                        You just Transafered <span class="amount">{{ formatCurrency(transactionDetails.amount) }}</span> to {{transactionDetails.recepientTag }}.
                     </p>
                     <NuxtLink :to="`/dashboard/transaction-details/${transactionDetails.referenceId}`" class="view-receipt">VIEW RECEIPT</NuxtLink>
                 </div>
@@ -84,14 +87,19 @@
 <script>
     import Cookies from 'js-cookie'
     export default {
-        props: {},
+        props: {
+            senderTag: {
+                type: String,
+                default: ''
+            }
+        },
         data() {
             return {
                 amount: '',
                 accountTag: '',
                 comment: '',
                 isLoading: false,
-                foundUser: {},
+                foundUser: undefined,
                 requestFailed: undefined,
                 requestSent: false,
                 showPinModal: false,
@@ -109,6 +117,7 @@
             },
             closeStatusModal() {
                 this.requestSent = false;
+                this.$emit('close-transfer-modal')
                 window.location.reload()
             },
             clearInputs() {
@@ -133,6 +142,7 @@
                         recipientAccountTag: this.accountTag,
                         comment: this.comment,
                         pin: this.digit_1 + this.digit_2 + this.digit_3 + this.digit_4,
+                        senderTag: this.senderTag
                     },
                     headers: {
                         Authorization: `Bearer ${Cookies.get("token")}`
@@ -159,6 +169,7 @@
             },
             verifyTag(tag) {
                 this.isLoading = true
+                this.foundUser = undefined
                 console.log(tag);
                 this.$axios({
                     method: "POST",
@@ -288,6 +299,11 @@
         font-size: 500;
         margin-bottom: 8px;
     }
+    .convert-currency{
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
     .pin-box {
         display: flex;
         width: 100%;
@@ -333,7 +349,7 @@
     }
     .call-to-action {
         position: absolute;
-        bottom: 4vh;
+        bottom: 0;
         left: 0;
         right: 0;
         text-align: center;
@@ -350,6 +366,7 @@
         border: 0;
         width: 90%;
         cursor: pointer;
+        margin-bottom: 4vh;
     }
     .default-btn:disabled {
         /* background: rgb(36, 35, 35); */
