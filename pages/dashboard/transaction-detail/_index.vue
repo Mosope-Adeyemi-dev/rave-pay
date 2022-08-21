@@ -1,12 +1,17 @@
 <template>
     <div>
-        <h1>Hello</h1>
+        <h1>{{ transactionId }}</h1>
     </div>
 </template>
 
 <script>
     export default {
-       layout: 'defaultLayout', 
+       layout: 'defaultLayout',
+       data() {
+        return {
+            transactionId: this.$route.params.index,
+        }
+       }
     }
 </script>
 
