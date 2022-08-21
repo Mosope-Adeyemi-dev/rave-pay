@@ -30,10 +30,10 @@ export default {
   background-image: url('@/assets/images/home-screen-bg.png');
   background-size: contain;
   width: 100vw;
+  height: 100vh;
 }
 .onboarding{
-  height: 75vh;
-  /* background: rebeccapurple; */
+  height: 70vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -68,10 +68,11 @@ export default {
 }
 .call-to-action{
   position: absolute;
-  bottom: 5vh;
+  bottom: 0;
   left: 0;
   right: 0;
   text-align: center;
+  padding-bottom: 4vh;
 }
 .call-to-action button {
   background: #EBB3FF;
