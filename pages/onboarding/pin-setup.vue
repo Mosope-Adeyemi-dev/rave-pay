@@ -93,7 +93,7 @@
                     }
                 }).then((onfulfilled) => {
                     this.isLoading = false
-                    this.$router.push('/dashboard');
+                    this.$router.push('/login');
                 }).catch((onrejected) => {
                     this.isLoading = false
                     if  (typeof onrejected.response.data.message !== 'string'){
