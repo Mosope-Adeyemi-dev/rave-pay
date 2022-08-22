@@ -42,7 +42,8 @@
             </div>
             <!-- {{ transactions }} -->
             <div v-if="transactions.length >= 1" class="transactions">
-                <div v-for="transaction in transactions" :key="transaction._id" class="transaction-card" @click="$router.push(`/dashboard/transaction-detail/${transaction._id}`)">
+             <!-- @click="$router.push(`/dashboard/transaction-detail/${transaction._id}`)" -->
+                <div v-for="transaction in transactions" :key="transaction._id" class="transaction-card">
                     <div class="lhs">
                         <img v-if="transaction.transactionType == 'Fund' || transaction.transactionType == 'Fund wallet'" src="@/assets/icons/fund.svg" alt="Fund your RavePay wallet" class="card-icon fund">
                         <img v-if="transaction.transactionType == 'Withdrawal'" src="@/assets/icons/withdraw.svg" alt="Withdraw from your RavePay wallet" class="card-icon withdraw">
