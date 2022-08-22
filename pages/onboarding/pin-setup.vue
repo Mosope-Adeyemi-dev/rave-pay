@@ -137,6 +137,8 @@
     width: 100%;
     justify-content: center;
     column-gap: 20px;
+    -moz-column-gap: 20px;
+    -webkit-column-gap: 20px;
 }
 .pin-box input{
     width: 60px;

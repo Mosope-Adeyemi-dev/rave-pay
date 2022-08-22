@@ -45,6 +45,7 @@
 </template>
 
 <script>
+    import Cookies from 'js-cookie'
     export default {
         layout: 'defaultLayout',
         data() {
@@ -73,7 +74,9 @@
                     }
                 }).then((onfulfilled) => {
                     this.isLoading = false
-                    this.$toast.success(onfulfilled.data.message);
+                    Cookies.set('token', onfulfilled.data.data.token, { expires: 1 })
+                    this.$router.push('/onboarding/create-account-tag');
+                    // this.$toast.success(onfulfilled.data.message);
                     // this.$router.push('/dashboard');
                 }).catch((onrejected) => {
                     this.isLoading = false

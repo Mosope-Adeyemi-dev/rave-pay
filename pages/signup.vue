@@ -51,6 +51,8 @@
                 lastname: '',
             }
         },
+        mounted(){
+        },
         methods: {
         signup () {
                 this.isLoading = true;

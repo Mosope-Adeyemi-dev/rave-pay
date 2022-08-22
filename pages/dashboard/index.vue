@@ -425,4 +425,11 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
 .transaction-amount.credit{
     color: green;
 }
+@media screen and (max-width: 400px) {
+    .card-details .wallet-balance{
+        font-weight: 600;
+        color: #1D1D21;
+        font-size: 22px;
+    }
+}
 </style>

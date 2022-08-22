@@ -14,11 +14,11 @@
                 </div>
             </div>
             <div class="call-to-action">
-                <p v-if="!isLoading" class="back" @click="$router.push('/login')">
-                    Go Back
+                <p v-if="!isLoading" class="back" @click="$router.push('/')">
+                    Go Home
                 </p>
-                <input v-if="!isLoading & !tagVerified" type="submit" class="default-btn" value="Verify Tag" :disabled="accountTag == ''" @click="verifyTag()">
-                <input v-if="!isLoading & tagStatus" type="submit" class="default-btn" value="Confirm Tag" :disabled="accountTag == ''" @click="setTag()">
+                <input v-if="!isLoading & !tagVerified" type="submit" class="default-btn" value="VERIFY TAG" :disabled="accountTag == ''" @click="verifyTag()">
+                <input v-if="!isLoading & tagStatus" type="submit" class="default-btn" value="CONFIRM TAG" :disabled="accountTag == ''" @click="setTag()">
                 <button v-if="isLoading" class="default-btn">
                     <img class="btn-loader" src="@/assets/icons/loader.svg" alt="">
                 </button>

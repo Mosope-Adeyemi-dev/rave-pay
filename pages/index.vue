@@ -33,7 +33,7 @@ export default {
   height: 100vh;
 }
 .onboarding{
-  height: 70vh;
+  height: 90vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -56,13 +56,13 @@ export default {
   background: black;
 }
 .onboarding div .app-slogan{
-  position: absolute;
+  /* position: absolute; */
   bottom: 50px;
   left: 0;
   right: 0;
   text-align: center;
   width: 80%;
-  margin: auto;
+  margin: 15vh auto 0;
   font-size: 30px;
   font-weight: 500;
 }
@@ -97,5 +97,16 @@ export default {
   font-size: 18px;
   color: green;
   text-decoration: underline;
+}
+@media screen and (max-width: 400px) {
+  .onboarding div .app-name{
+    font-size: 20px;
+  }
+  .onboarding div .app-slogan{
+    bottom: 50px;
+    width: 90%;
+    margin: 10vh auto 0;
+    font-size: 22px;
+  }
 }
 </style>

@@ -149,8 +149,7 @@
                             this.$toast.error(onrejected.response.data.message[x]);
                         }
                     } else {
-                        this.bankListError = onrejected.response.data.message
-                        // this.$toast.error(onrejected.response.data.message);
+                        this.$toast.error(onrejected.response.data.message);
                     }
                 });
             },
