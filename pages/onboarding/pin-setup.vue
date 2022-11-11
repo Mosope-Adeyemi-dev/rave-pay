@@ -76,9 +76,6 @@
             })
         },
         confirmPin(){
-            // if(this.digit_1 + this.digit_2 + this.digit_3 + this.digit_4 === this.digit_1s + this.digit_2s + this.digit_3s + this.digit_4s){
-
-            // }
         },
         setTransactionPin(){
                 this.isLoading = true;

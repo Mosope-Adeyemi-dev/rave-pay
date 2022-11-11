@@ -4,7 +4,7 @@
             <div class="user-intro">
                 <img class="user-photo" :src="userDetails?.photo" alt="">
                 <div class="user-intro-text">
-                    <p class="greeting">@{{ userDetails?.username}}</p>
+                    <p class="intro-text-account-tag">@{{ userDetails?.username}}</p>
                 </div>  
             </div>
             <p class="logout" @click="logOut()">LOGOUT</p>
@@ -233,7 +233,7 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
 .whole-container{
     height: 100vh;
     width: 100%;
-    /* background: black; */
+    background: rgb(0, 0, 0);
     padding-top: 20px;
 }
 .header{
@@ -268,15 +268,17 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
     margin-left: 10px;
     display: flex;
     align-items: center;
+    color: white;
 }
-.user-intro-text p{
-    font-size: 16px;
-    font-weight: 600;
+.user-intro-text .intro-text-account-tag{
+    font-size: 14px;
+    font-weight: 500;
 }
 .balance-card{
     position: relative;
     width: 85%;
-    margin: 30px auto 0 ;
+    margin: 30px auto 0;
+    background: white;
     height: 150px;
     border: 1px solid #DFDFDF;
     background-image: url('@/assets/images/balance-card-bg.png');
@@ -287,7 +289,6 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
 }
 .card-details{
     position: absolute;
-    /* background: red; */
     top: auto;
     bottom: 10px;
     left: 20px;
@@ -320,15 +321,17 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
     font-weight: 500;
     font-size: 16px;
     margin-top: 10px;
+    color: white;
 }
 .icon-box{
     height: 70px;
     width: 70px;
     border-radius: 16px;
-    border: 1px solid lightgray;
+    /* border: 1px solid lightgray; */
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgba(245, 245, 245, 0.158);
     /* box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.071); */
 }
 .icon-box img{
@@ -354,7 +357,7 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
 }
 .recent-transactons{
     height: 50vh;
-    border-top: 1px solid #F7F7F7;
+    border-top: 1px solid #f7f7f71c;
     position: relative;
 }
 .transaction-head-box{
@@ -368,6 +371,7 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
 .transaction-head-box p{
     font-size: 18px;
     font-weight: 500;
+    color: white;
 }
 .transactions{
     padding-top: 10px;
@@ -386,7 +390,7 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
     position: relative;
     width: 100%;
     /* background: #F7F7F7; */
-    background: whitesmoke;
+    background: rgba(34, 33, 33, 0.397);
     height: 65px;
     display: flex;
     align-items: center;
@@ -398,14 +402,15 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
 .lhs{
     display: flex;
     align-items: center;
+    color: whitesmoke;
 }
 .lhs .details .action{
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
 }
 .lhs .details .action-info{
-    font-weight: 400;
-    font-size: 13px;
+    font-weight: 300;
+    font-size: 12px;
 }
 .transaction-user-tag{
     font-weight: 600;
@@ -413,7 +418,7 @@ import WithdrawFundsModal from '~/components/WithdrawFundsModal.vue';
 .transaction-amount{
     font-size: 16px;
     font-weight: 500;
-    background: whitesmoke;
+    /* background: whitesmoke; */
     height: 100%;
     position: absolute;
     display: flex;

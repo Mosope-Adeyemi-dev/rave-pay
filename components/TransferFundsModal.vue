@@ -8,8 +8,9 @@
                 <label>Recepient Tag</label>
                 <input v-model="accountTag" type="text" required>
             </div>
-            <div class="input-box">
+            <div v-show="foundUser" class="">
                 <label>Recepient Info</label>
+                <!-- <img :src="foundUser?.photo" alt="user profile picture"> -->
                 <div class="fake-input">
                     <p v-if="!requestFailed" class="found-receipient">{{ foundUser?.lastname?.toUpperCase() }} {{ foundUser?.firstname?.toUpperCase() }}</p>
                     <p v-if="requestFailed" class="found-receipient error">INVALID ACCOUNT TAG</p>
@@ -292,7 +293,7 @@
     .input-box {
         display: flex;
         flex-direction: column;
-        margin-bottom: 25px;
+        margin-bottom: 15px;
     }
     .input-box label {
         font-size: 15px;
@@ -328,7 +329,7 @@
         border: 1px solid #DFDFDF;
         border-radius: 8px;
         padding-left: 10px;
-        font-size: 18px;
+        font-size: 16px;
     }
     .fake-input {
         background: whitesmoke;
