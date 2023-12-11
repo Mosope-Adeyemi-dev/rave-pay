@@ -14,6 +14,16 @@
                         </div>
                 </div>
                 <p class="vendor-alert">Create an <NuxtLink to="/signup" class="highlight">account!</NuxtLink></p>
+                <br>
+                <p class="vendor-alert">OR</p>
+                <br>
+
+                <div class="demo-details">
+                    <p class="demo-title">Demo Account Details</p>
+                    <p>Email: demo@test.com</p>
+                    <p>Password: Test123@</p>
+                    <p>Pin: 1234</p>
+                </div>
             </div>
             <div class="call-to-action">
                 <p v-if="!isLoading" class="back" @click="$router.push('/')">
@@ -145,5 +155,17 @@
     color: #00A91B;
     font-weight: 500;
     text-decoration: underline;
+}
+.demo-details {
+    width: 100%;
+    background-color: #000;
+    margin-top: 10px;
+    color: #DFDFDF;
+    border-radius: 10px;
+    padding: 10px;
+}
+.demo-title {
+    font-weight: 600;
+    font-size: 16px;
 }
 </style>
