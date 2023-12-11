@@ -163,6 +163,7 @@
     color: #DFDFDF;
     border-radius: 10px;
     padding: 10px;
+    text-align: center;
 }
 .demo-title {
     font-weight: 600;
