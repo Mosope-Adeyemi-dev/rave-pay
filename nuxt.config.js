@@ -51,7 +51,7 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     meta: {
-      title: 'Rave Payment Wallet',
+      title: 'Rave Pay',
       author: 'mosope.dev'
     },
     manifest: {
